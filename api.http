@@ -1,0 +1,32 @@
+
+#List all users
+GET http://localhost:3001/users HTTP/1.1
+Content-Type: application/json
+
+###
+#Add user
+POST http://localhost:3001/users HTTP/1.1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "telegramId": "18723654",
+  "password": "*******",
+  "createdAt": "Some sunny day"
+}
+
+###
+#Update user data
+PUT http://localhost:3001/users/1 HTTP/1.1
+Content-Type: application/json
+
+{
+  "telegramId": 123,
+  "password": "123",
+  "token": "123"
+}
+
+###
+#Delete user
+DELETE http://localhost:3001/users/1 HTTP/1.1
+Content-Type: application/json
