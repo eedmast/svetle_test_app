@@ -40,7 +40,7 @@
             token: data?.token,
             createdAt: data?.createdAt
         }
-        userCreated = !!data.id;
+        userCreated = !!data?.id;
     });
 
     function showDialog(event) {
@@ -59,6 +59,7 @@
         sendCreateUserRequest(newUserData).then(
             (result) => {
                 userStore.set(result);
+                toShowToken = true;
             },
             (error) => {
                 errorMessage = error;
@@ -141,7 +142,7 @@
   {#if userLoggedIn}
     <Profile userData={userData}/>
   {:else if isDialogOpen}
-    <SignupForm action={dialogType} showToken={toShowToken}
+    <SignupForm action={dialogType} showToken={toShowToken} token={userData.token}
                 on:signupRequest={handleUserSignup}
                 on:loginRequest={handleUserLogin}
                 on:tokenShow={handleTokenShow}

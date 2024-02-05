@@ -10,8 +10,8 @@
 
     let labelText = "";
 
-    let telegramId = "237642";
-    let password = "password";
+    let telegramId = "";
+    let password = "";
     let loginToken = "";
 
     let dispatch = createEventDispatcher();
@@ -24,11 +24,11 @@
     $: labelText = action === 'signup' ? 'Sign up' : 'Log in';
     $: isLoginForm = action !== 'signup';
 
-    export function isValidTelegramId(value) {
 
+    export function isValidTelegramId(value) {
         const pattern = "^[0-9]*$"
-        let isValid =  new RegExp(pattern).test(value.trim());
-        isValid &&= value.trim().length;
+        let isValid = new RegExp(pattern).test(value.trim());
+        isValid &&= value.trim().length > 0;
         return isValid;
     }
 
@@ -74,7 +74,3 @@
   {/if}
 
 </DialogBox>
-
-{#if token.trim().length > 0}
-
-{/if}
