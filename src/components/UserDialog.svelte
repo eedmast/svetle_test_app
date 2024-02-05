@@ -6,27 +6,20 @@
     import DialogBase from "./DialogBase.svelte";
     import {APP_STATES} from "../utils/utils";
 
-    // export let action = '';
     export let state;
     export let token = '';
-    // export let showToken;
 
     let labelText = "";
-
     let telegramId = "";
     let password = "";
-    let loginToken = "";
-
     let dispatch = createEventDispatcher();
 
     $:isTelegramIdValid = isValidTelegramId(telegramId);
     $:isPasswordValid = password.trim().length > 0;
-    // $:isTokenValid = (loginToken.trim().length > 0 || !isLoginForm);
     $:isFormValid = isTelegramIdValid && isPasswordValid
 
     $: isTokenBox = state === APP_STATES.SHOW_TOKEN || state === APP_STATES.VALIDATE;
     $: labelText = isTokenBox ? '' : state === APP_STATES.SIGNUP ? 'Sign up' : 'Log in';
-    // $: isLoginForm = action !== 'signup';
 
 
     export function isValidTelegramId(value) {
@@ -42,19 +35,15 @@
             telegramId: telegramId,
             password: password
         };
-
         dispatch(eventName, data);
     }
 
     function closeTokenBox() {
-        console.warn(`DIAG dispatched 'closeTokenBox' event`);
         dispatch('closeTokenBox');
     }
 
     function validateToken(event) {
-        console.warn(`DIAG: validate token. ${event.detail}`);
         dispatch('validateToken', event.detail);
-        // showToken = false;
     }
 
 </script>

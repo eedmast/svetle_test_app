@@ -7,14 +7,10 @@
     import Profile from "./components/Profile.svelte";
 
     let appState = null;
-
-   // let dialogType = 'signup';
     let userData;
     //TODO: implement error handling
     let errorMessage;
 
-    // $: dialogType = userCreated ? 'login' : 'signup'
-    // $: menuButtonCaption = userCreated ? (userLoggedIn ? 'Profile' : 'Login') : 'Signup'
     $: menuCaption = appState === APP_STATES.IDLE ? 'Profile': '';
     $: console.warn(`APP STATE: ${appState}`);
 
@@ -22,9 +18,7 @@
         fetchUserData().then(
             (result) => {
                 userStore.set(result);
-                // dataInitComplete = true;
                 appState = appState || (result ? APP_STATES.LOGIN : APP_STATES.SIGNUP)
-                console.warn(`After onMount appState = ${appState}`);
             },
             (error) => {
                 errorMessage = error.message;
@@ -39,10 +33,9 @@
             token: data?.token,
             createdAt: data?.createdAt
         }
-        // userCreated = !!data?.id;
     });
 
-    function showDialog(event) {
+    function showDialog() {
         if (appState === APP_STATES.IDLE) appState = APP_STATES.LOGIN
     }
 
@@ -93,8 +86,6 @@
     }
 
     function handleValidateToken(event) {
-        console.warn(`Validating: `);
-        console.warn(event);
         if(event.detail === userData.token) {
             errorMessage = '';
             appState = APP_STATES.SHOW_PROFILE;
@@ -107,8 +98,6 @@
         appState = APP_STATES.IDLE;
         sendDeleteUserRequest().then( (result) => {
             userData = result;
-            console.warn(`User deleted.`);
-            console.warn(result);
             appState = APP_STATES.SIGNUP;
         })
         errorMessage = 'Validation failed'
@@ -130,7 +119,10 @@
         width: 100%;
         height: 5rem;
         padding-left: 2rem;
-        background-color: #0088cc;
+        background-image: linear-gradient(
+                to right,
+                rgba(20, 156, 254, 0.8),
+                rgba(0, 136, 204, 0.8));
         padding-top: 0;
         padding-bottom: 0;
         text-align: left;
@@ -157,7 +149,6 @@
 
 </style>
 
-<!--<main on:mousedown={ () => isDialogOpen = false || toShowToken}>-->
 <main>
   <header class="header-style">
     <a class="header-text" on:click|stopPropagation={showDialog} >{menuCaption}</a>

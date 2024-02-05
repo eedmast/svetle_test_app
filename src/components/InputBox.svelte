@@ -13,15 +13,8 @@
         font: inherit;
         border-radius: 7px;
         background: white;
-        /*padding: 0.15rem 0.25rem;*/
         transition: border-color 0.1s ease-out;
     }
-
-    /*input::-webkit-outer-spin-button,*/
-    /*input::-webkit-inner-spin-button {*/
-    /*    -webkit-appearance: none;*/
-    /*    margin: 0;*/
-    /*}*/
 
     input:focus,
     textarea:focus {

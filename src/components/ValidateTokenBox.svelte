@@ -15,7 +15,6 @@
     })
 
     function handlePasteClick() {
-        console.warn(`Paste from clipboard not implemented`);
     }
 
     function validateToken() {
@@ -25,6 +24,7 @@
 </script>
 
 <style>
+    h2 { max-width: 80vw}
     img {
         cursor: pointer;
         height: 1.6rem;
@@ -54,7 +54,7 @@
   <h2>Input your token to validate account</h2>
   <img src="paste_icon.png" alt="" on:click={handlePasteClick}/>
 </div>
-<textarea name="token" id="" cols="50" rows="10" bind:value={token}></textarea>
+<textarea name="token" id="" cols="40" rows="10" bind:value={token}></textarea>
 <div>
   <button disabled = {!isTokenValid} on:click|stopPropagation={validateToken}>Validate</button>
 </div>

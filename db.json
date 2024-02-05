@@ -1,11 +1,3 @@
 {
-  "users": [
-    {
-      "id": 1,
-      "telegramId": "123",
-      "password": "123",
-      "token": "iZSkOGQVTWJsxAsnjtXAtSCqmFnMxRTwlQRNSEXfrnjZLpAUqTDReIpPPDUibxRFTrpIkcNHWPDXuQRxZCPVKJXuuCheFSSjQSzmWscEyfXpWYAzlTSZtNlKaqClCRtI",
-      "createdAt": "5.02.2024"
-    }
-  ]
+  "users": []
 }

@@ -14,11 +14,9 @@
     })
 
     function handleCopyClick() {
-        console.warn(`Copy to clipboard not implemented`);
     }
 
     function closeTokenBox() {
-        console.warn(`TOKEN_BOX: close button clicked.`);
         dispatch('closeTokenBox');
     }
 
