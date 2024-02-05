@@ -2,6 +2,7 @@
     import {onMount, createEventDispatcher, onDestroy} from "svelte";
 
     export let token;
+    let elementId = 'tokenBox';
 
     let dispatch = createEventDispatcher();
 
@@ -14,6 +15,12 @@
     })
 
     function handleCopyClick() {
+        window.getSelection().selectAllChildren(
+            document.getElementById(elementId)
+        );
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+
     }
 
     function closeTokenBox() {
@@ -56,5 +63,5 @@
   <h2>Save this token!!!</h2>
   <img src="copy_icon.png" alt="" on:click={handleCopyClick}/>
 </div>
-<div class="token-box">{token}</div>
+<div id={elementId} class="token-box">{token}</div>
 <button on:click|stopPropagation={closeTokenBox}>Close</button>
