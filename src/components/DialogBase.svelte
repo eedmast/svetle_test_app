@@ -1,6 +1,12 @@
 <script>
-  export let activeDialog = 'signup';
-  export let token = '';
+  import {createEventDispatcher} from "svelte";
+
+  let dispatch = createEventDispatcher();
+
+  function close() {
+      dispatch('close');
+  }
+
 </script>
 
 <style>
@@ -22,5 +28,7 @@
 <div class="dialog" on:mousedown|stopPropagation>
   <slot name = header></slot>
   <slot></slot>
-  <slot name = footer></slot>
+  <slot name = footer>
+    <button on:click|stopPropagation={close}>Close</button>
+  </slot>
 </div>

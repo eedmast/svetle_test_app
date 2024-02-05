@@ -2,6 +2,7 @@
     import {onMount, createEventDispatcher, onDestroy} from "svelte";
 
     export let token;
+
     let dispatch = createEventDispatcher();
 
     onMount( () => {
@@ -17,6 +18,7 @@
     }
 
     function closeTokenBox() {
+        console.warn(`TOKEN_BOX: close button clicked.`);
         dispatch('closeTokenBox');
     }
 

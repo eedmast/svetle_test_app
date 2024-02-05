@@ -1,3 +1,12 @@
+export const APP_STATES = {
+    IDLE: 'idle',
+    SIGNUP: 'signup',
+    SHOW_TOKEN: 'showToken',
+    LOGIN: 'login',
+    VALIDATE: 'validate',
+    SHOW_PROFILE: 'profile'
+}
+
 export function generateToken() {
     let token = '';
     for(let i = 0; i < 128; i++) {

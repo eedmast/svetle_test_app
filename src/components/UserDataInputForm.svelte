@@ -4,8 +4,6 @@
 
     export let telegramId = "";
     export let password = "";
-    export let token = "";
-    export let isLoginForm = false;
 
     let dispatch = createEventDispatcher();
 
@@ -36,13 +34,3 @@
     type="password"
     on:input={(e)=> {password = e.target.value}}
 />
-
-{#if isLoginForm}
-<InputBox
-    id="token"
-    label="Paste your token here"
-    value={token}
-    type="text"
-    on:input={(e)=> {token = e.target.value}}
-/>
-{/if}

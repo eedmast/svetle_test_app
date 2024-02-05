@@ -1,31 +1,30 @@
 <script>
     import {onMount, onDestroy} from 'svelte';
     import userStore from './user_store'
-    import {formatCurrentTime, generateToken} from "./utils/utils";
+    import {APP_STATES, formatCurrentTime, generateToken} from "./utils/utils";
     import {fetchUserData, sendCreateUserRequest, sendDeleteUserRequest} from "./utils/serverUtils";
-    import SignupForm from "./components/SignupForm.svelte";
+    import UserDialog from "./components/UserDialog.svelte";
     import Profile from "./components/Profile.svelte";
 
-    let dataInitComplete = false;
-    let isDialogOpen = true;
-    let toShowToken = false;
-    let userCreated = false;
+    let appState = null;
 
-    let userLoggedIn = false;
-
-    let dialogType = 'signup';
+   // let dialogType = 'signup';
     let userData;
     //TODO: implement error handling
     let errorMessage;
 
-    $: dialogType = userCreated ? 'login' : 'signup'
-    $: menuButtonCaption = userCreated ? (userLoggedIn ? 'Profile' : 'Login') : 'Signup'
+    // $: dialogType = userCreated ? 'login' : 'signup'
+    // $: menuButtonCaption = userCreated ? (userLoggedIn ? 'Profile' : 'Login') : 'Signup'
+    $: menuCaption = appState === APP_STATES.IDLE ? 'Profile': '';
+    $: console.warn(`APP STATE: ${appState}`);
 
     onMount( ()=> {
         fetchUserData().then(
             (result) => {
                 userStore.set(result);
-                dataInitComplete = true;
+                // dataInitComplete = true;
+                appState = appState || (result ? APP_STATES.LOGIN : APP_STATES.SIGNUP)
+                console.warn(`After onMount appState = ${appState}`);
             },
             (error) => {
                 errorMessage = error.message;
@@ -40,11 +39,11 @@
             token: data?.token,
             createdAt: data?.createdAt
         }
-        userCreated = !!data?.id;
+        // userCreated = !!data?.id;
     });
 
     function showDialog(event) {
-        isDialogOpen = true;
+        if (appState === APP_STATES.IDLE) appState = APP_STATES.LOGIN
     }
 
     function handleUserSignup(event) {
@@ -59,7 +58,7 @@
         sendCreateUserRequest(newUserData).then(
             (result) => {
                 userStore.set(result);
-                toShowToken = true;
+                appState = APP_STATES.SHOW_TOKEN
             },
             (error) => {
                 errorMessage = error;
@@ -69,26 +68,50 @@
 
     function handleUserLogin(event) {
         fetchUserData();
-        if (checkLoginData(event.detail)) {
-            userLoggedIn = true;
+        if (checkLogin(event.detail)) {
+            appState = APP_STATES.VALIDATE
+        } else {
+
         }
 
     }
 
-    function checkLoginData(loginData) {
+    function checkLogin(loginData) {
         //TODO: provide user more information in case of wrong credentials
         let isDataValid = true;
         for (const [key, value] of Object.entries(loginData)) {
             console.log(`${key}: ${value}`);
-            if(value != userData[key]) {
+            if(value !== userData[key]) {
                 isDataValid = false;
             }
         }
         return isDataValid;
     }
 
-    function handleTokenShow(e) {
-        toShowToken = e.detail;
+    function handleTokenClose(e) {
+        appState = APP_STATES.IDLE;
+    }
+
+    function handleValidateToken(event) {
+        console.warn(`Validating: `);
+        console.warn(event);
+        if(event.detail === userData.token) {
+            errorMessage = '';
+            appState = APP_STATES.SHOW_PROFILE;
+        } else {
+            handleUserDelete();
+        }
+    }
+
+    function handleUserDelete() {
+        appState = APP_STATES.IDLE;
+        sendDeleteUserRequest().then( (result) => {
+            userData = result;
+            console.warn(`User deleted.`);
+            console.warn(result);
+            appState = APP_STATES.SIGNUP;
+        })
+        errorMessage = 'Validation failed'
     }
 
   onDestroy(() => {
@@ -134,18 +157,20 @@
 
 </style>
 
-<main on:mousedown={ () => isDialogOpen = false || toShowToken}>
+<!--<main on:mousedown={ () => isDialogOpen = false || toShowToken}>-->
+<main>
   <header class="header-style">
-    <a class="header-text" on:click|stopPropagation={showDialog} >{dataInitComplete ? menuButtonCaption : ''}</a>
+    <a class="header-text" on:click|stopPropagation={showDialog} >{menuCaption}</a>
   </header>
 
-  {#if userLoggedIn}
-    <Profile userData={userData}/>
-  {:else if isDialogOpen}
-    <SignupForm action={dialogType} showToken={toShowToken} token={userData.token}
+  {#if appState !== APP_STATES.IDLE && appState !== APP_STATES.SHOW_PROFILE}
+    <UserDialog state = {appState} token={userData.token}
                 on:signupRequest={handleUserSignup}
                 on:loginRequest={handleUserLogin}
-                on:tokenShow={handleTokenShow}
+                on:validateToken={handleValidateToken}
+                on:closeTokenBox={handleTokenClose}
     />
+  {:else if appState === APP_STATES.SHOW_PROFILE}
+    <Profile userData={userData}/>
   {/if}
 </main>
